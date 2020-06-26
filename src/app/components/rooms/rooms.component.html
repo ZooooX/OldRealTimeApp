@@ -1,0 +1,16 @@
+<h2>{{this.gameTitle}} Rooms</h2>
+
+<div class='rooms-container'>
+  <ul>
+    <li>Room 1 <a [routerLink]="['/'+this.game, '1']">Join</a></li>
+    <li>Room 2 <a [routerLink]="['/'+this.game, '2']">Join</a></li>
+    <li>Room 3 <a [routerLink]="['/'+this.game, '3']">Join</a></li>
+    <li>Room 4 <a [routerLink]="['/'+this.game, '4']">Join</a></li>
+  </ul>
+</div>
+
+<div class="room-creation-container">
+  <h3>Create a new room</h3>
+  <input type="text" name="room-creation-input" id="room-creation-input" value="">
+  <input type="submit" name="room-creation-submit" id="room-creation-submit">
+</div>

@@ -1,0 +1,24 @@
+<button mat-fab class="return-button" (click)="backToRooms()">
+  <span class="material-icons">arrow_back</span>
+</button>
+<div>
+  <div class="players">
+    <div class="you-container">
+      <span>You</span>
+      <button mat-stroked-button class="not-ready" (click)="readyToggle()" id="youReadyButton">Not ready</button>
+      <span contenteditable="true">Salut</span>
+    </div>
+
+    <div class="players-separator-container">
+      VS
+    </div>
+
+    <div class="ennemy-container">
+
+    </div>
+  </div>
+  <mat-form-field>
+     <mat-label>What's your name ? {{data.roomId}}</mat-label>
+     <input matInput >
+   </mat-form-field>
+</div>

@@ -1,9 +1,24 @@
 <div class="header">
-  <span class="material-icons menu-burger" (click)="sidenav.toggle()">
-    menu
-  </span>
 
-  <span class="appName"> Real Time App</span>
+  <div class="left-side-header">
+    <span class="material-icons menu-burger-icon" (click)="sidenav.toggle()">
+      menu
+    </span>
+    <span class="appName"> Real Time App</span>
+
+  </div>
+
+  <div class="right-side-header">
+    <span class="playerName"> Rémy Tupenot</span>
+    <input class="playerNameInput hidden">
+    <span class="material-icons hidden" id="validateName" (click)="validateName()">
+      done
+    </span>
+    <span class="material-icons update-icon" (click)="updateName()">
+      create
+    </span>
+  </div>
+
 </div>
 
 

@@ -1,17 +1,54 @@
 .header {
   display: flex;
   align-items: center;
+
   background-color: grey;
   height: 5%;
-  .appName{
-    margin-left: 5%;
-    color: white;
+
+  .left-side-header{
+    display: flex;
+    align-items: center;
+    flex:0.5;
+    .appName{
+      margin-left: 5%;
+      color: white;
+    }
+
+    .menu-burger-icon{
+      margin-left: 2%;
+      color:white;
+      cursor: pointer;
+
+      &:hover{
+        color:#130f40;
+      }
+    }
   }
 
-  .menu-burger{
-    margin-left: 2%;
-    color:white;
-    cursor: pointer;
+  .right-side-header{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 0.5;
+
+    .update-icon{
+      margin-right: 2%;
+      color:white;
+      cursor: pointer;
+
+      &:hover{
+        color:#130f40;
+      }
+    }
+
+    .playerName{
+      margin-right: 5%;
+      color: white;
+    }
+
+    .playerNameInput{
+      margin-right: 5%;
+    }
   }
 }
 
@@ -42,4 +79,9 @@ h1.example-app-name {
 
 mat-nav-list{
   padding:0;
+}
+
+
+.hidden{
+  display:none;
 }

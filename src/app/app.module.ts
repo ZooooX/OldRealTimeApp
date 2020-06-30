@@ -11,10 +11,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { TicTacToeGameComponent } from './components/tic-tac-toe-game/tic-tac-toe-game.component';
 import { ConnectFourGameComponent } from './components/connect-four-game/connect-four-game.component';
+import { GameModalComponent } from './components/game-modal/game-modal.component';
 
 /*Materials*/
-import {MatListModule} from '@angular/material/list';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import {DemoMaterialModule} from './material-modules';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -25,16 +26,19 @@ import {MatSidenavModule} from '@angular/material/sidenav';
     RoomsComponent,
     LobbyComponent,
     TicTacToeGameComponent,
-    ConnectFourGameComponent
+    ConnectFourGameComponent,
+    GameModalComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatSidenavModule,
-    MatListModule
+    DemoMaterialModule
   ],
-  providers: [],
+  entryComponents: [TicTacToeGameComponent, GameModalComponent],
+  providers: [
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

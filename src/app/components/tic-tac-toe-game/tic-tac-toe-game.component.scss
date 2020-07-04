@@ -1,0 +1,14 @@
+:host{
+  display: flex;
+
+  .game-container{
+    flex: none;
+    width: 70%;
+
+  }
+
+  .chat-container{
+    flex: none;
+    width: 30%;
+  }
+}

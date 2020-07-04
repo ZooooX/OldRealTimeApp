@@ -1,9 +1,11 @@
-<p>chat - room {{this._roomId}}</p>
+<div class="chat-container">
+  <p class="chat-title">{{this._roomId}} - Chat</p>
 
-<div id="box">
+  <div id="box">
 
+  </div>
+  <form ngNoForm id="form_chat">
+    <input type="text" name="message" id="message" value="" autocomplete="off">
+    <input type="submit" value="Envoyer">
+  </form>
 </div>
-<form  id="form_chat">
-  <input type="text" name="message" id="message" value="">
-  <input type="submit" value="Envoyer">
-</form>

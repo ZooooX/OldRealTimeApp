@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+
 import { UrlSegment , UrlSegmentGroup, Router , UrlTree, ActivatedRoute} from '@angular/router';
+import { WebSocketServiceService } from '../../services/web-socket-service.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-rooms',
@@ -10,14 +13,26 @@ export class RoomsComponent implements OnInit {
 
   game : string;
   gameTitle : string;
-  constructor(private route:ActivatedRoute) { }
+  newRoomName : string;
+
+  rooms : any;
+
+  constructor(private route:ActivatedRoute, private webSocketService : WebSocketServiceService, private changeDetection: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.route.params.subscribe(
       params => {
         this.changeGame();
+        this.webSocketService.emit("load-rooms", this.game);
       }
     )
+
+    this.webSocketService.listen("rooms").subscribe((data) =>{
+      this.rooms = data
+      console.log(data);
+
+      //this.changeDetection.detectChanges();
+    });
   }
 
 
@@ -35,4 +50,7 @@ export class RoomsComponent implements OnInit {
     }
   }
 
+  createNewRoom(){
+    this.webSocketService.emit('new-room', {roomId : this.newRoomName, game : this.game});
+  }
 }

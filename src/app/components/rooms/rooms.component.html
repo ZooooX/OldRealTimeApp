@@ -2,15 +2,13 @@
 
 <div class='rooms-container'>
   <ul>
-    <li>Room 1 <a [routerLink]="['/'+this.game, '1']">Join</a></li>
-    <li>Room 2 <a [routerLink]="['/'+this.game, '2']">Join</a></li>
-    <li>Room 3 <a [routerLink]="['/'+this.game, '3']">Join</a></li>
-    <li>Room 4 <a [routerLink]="['/'+this.game, '4']">Join</a></li>
+    <li *ngFor="let room of rooms">{{room.roomId}}<a [routerLink]="['/'+this.game,room.roomId]">Join</a></li>
   </ul>
 </div>
 
-<div class="room-creation-container">
+
+<form (ngSubmit)="createNewRoom()" #createRoomForm="ngForm" class="room-creation-container">
   <h3>Create a new room</h3>
-  <input type="text" name="room-creation-input" id="room-creation-input" value="">
-  <input type="submit" name="room-creation-submit" id="room-creation-submit">
-</div>
+  <input type="text" [(ngModel)]="newRoomName" name="newRoomName" id="newRoomName">
+  <input type="submit" value="Create">
+</form>

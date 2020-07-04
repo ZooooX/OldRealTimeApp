@@ -35,18 +35,24 @@ export class ChatComponent implements OnInit {
       $("#message").val("").focus();
     });
 
+  
     //new message recieved
     this.webSocketService.listen("message").subscribe((data) =>{
       console.log(data);
 
-      self.nouveauMessage(data);
+      self.nouveauMessage(data["message"], data["username"]);
     });
 
   }
 
-  nouveauMessage(/*pseudo : string ,*/message : any /*,lacolor : string*/){
-    //$('#box').append('<p><span class="pseudoMessage" style="color:rgb('+lacolor+')">' + pseudo + '</span>: ' + message +'</p>');
-    $('#box').append('<p>'+ message +'</p>');
+  nouveauMessage(message : any, pseudo ?: string /*,lacolor : string*/){
+    if(pseudo){
+      $('#box').append("<p class='message'><span class='pseudoMessage'>" + pseudo + "</span>: " + message +"</p>");
+    }
+    else{
+      $('#box').append("<p class='message'> You : "+ message +"</p>");
+    }
+    this.scrollToBottom();
   }
 
   nouvellePersonne(pseudo: string){
@@ -60,5 +66,9 @@ export class ChatComponent implements OnInit {
 
   resetChat(){
     $('#box').empty();
+  }
+
+  scrollToBottom() {
+      $('#box').scrollTop($('#box').prop("scrollHeight"));
   }
 }

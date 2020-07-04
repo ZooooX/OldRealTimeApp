@@ -1,4 +1,4 @@
-import { Component, OnInit , ViewChild, AfterViewInit} from '@angular/core';
+import { Component, OnInit , ViewChild, AfterViewInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import { GameModalComponent } from '../game-modal/game-modal.component';
@@ -12,7 +12,7 @@ import { ChatComponent } from '../chat/chat.component';
   templateUrl: './tic-tac-toe-game.component.html',
   styleUrls: ['./tic-tac-toe-game.component.scss']
 })
-export class TicTacToeGameComponent implements OnInit, AfterViewInit{
+export class TicTacToeGameComponent implements OnInit, AfterViewInit, OnDestroy{
 
   roomId : string;
   game : string = 'tictactoe';
@@ -38,7 +38,7 @@ export class TicTacToeGameComponent implements OnInit, AfterViewInit{
   ngAfterViewInit(){
     this.route.params.subscribe(
       params => {
-        this.child.resetChat();
+        //this.child.resetChat();
       }
     );
 
@@ -57,5 +57,9 @@ export class TicTacToeGameComponent implements OnInit, AfterViewInit{
     });
   }
 
+  ngOnDestroy(){
+    this.webSocket.removeAllListeners('message');
+    this.webSocket.emit('leave-room',this.roomId);
+  }
 
 }

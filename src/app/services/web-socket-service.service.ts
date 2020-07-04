@@ -24,5 +24,9 @@ export class WebSocketServiceService {
 
   emit(eventName: string, data: any){
     this.socket.emit(eventName, data);
-  } 
+  }
+
+  removeAllListeners(eventName : string){
+    this.socket.removeAllListeners(eventName);
+  }
 }

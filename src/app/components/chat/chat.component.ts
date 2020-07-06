@@ -28,26 +28,25 @@ export class ChatComponent implements OnInit {
     $("#form_chat").submit(function(event){
       event.preventDefault();
       let message : any = $('#message').val();
-      console.log(message);
-
       self.webSocketService.emit('message',{room : self._roomId, message :  message});
       self.nouveauMessage(/*pseudo,*/message/*,color*/);
       $("#message").val("").focus();
     });
 
-  
+
     //new message recieved
     this.webSocketService.listen("message").subscribe((data) =>{
       console.log(data);
 
-      self.nouveauMessage(data["message"], data["username"]);
+      self.nouveauMessage(data["message"], data["username"], data["color"]);
     });
 
   }
 
-  nouveauMessage(message : any, pseudo ?: string /*,lacolor : string*/){
+  //rajoute un nouveau message dans le dom
+  nouveauMessage(message : any, pseudo ?: string  , color ?: string){
     if(pseudo){
-      $('#box').append("<p class='message'><span class='pseudoMessage'>" + pseudo + "</span>: " + message +"</p>");
+      $('#box').append("<p class='message'><span class='pseudoMessage' style='color:"+ color +"'>" + pseudo + "</span>: " + message +"</p>");
     }
     else{
       $('#box').append("<p class='message'> You : "+ message +"</p>");
@@ -55,6 +54,7 @@ export class ChatComponent implements OnInit {
     this.scrollToBottom();
   }
 
+  //rajoute un message de connexion dans le chat
   nouvellePersonne(pseudo: string){
     if (pseudo) {
       $('#box').append('<p class="messageConnexion"> ' + pseudo + ' a rejoint le chat</p>');
@@ -64,10 +64,12 @@ export class ChatComponent implements OnInit {
     }
   }
 
+  //clean le chat
   resetChat(){
     $('#box').empty();
   }
 
+  //scroll a la fin du chat
   scrollToBottom() {
       $('#box').scrollTop($('#box').prop("scrollHeight"));
   }

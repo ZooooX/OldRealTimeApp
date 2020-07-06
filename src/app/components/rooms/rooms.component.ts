@@ -20,13 +20,15 @@ export class RoomsComponent implements OnInit {
   constructor(private route:ActivatedRoute, private webSocketService : WebSocketServiceService, private changeDetection: ChangeDetectorRef) { }
 
   ngOnInit() {
+
+    //si changement de route, change le jeu et load les rooms du jeu en question
     this.route.params.subscribe(
       params => {
         this.changeGame();
         this.webSocketService.emit("load-rooms", this.game);
       }
     )
-
+    //reception des rooms de la part du serveur , changement sur le dom via le ngFor
     this.webSocketService.listen("rooms").subscribe((data) =>{
       this.rooms = data
       console.log(data);
@@ -50,6 +52,7 @@ export class RoomsComponent implements OnInit {
     }
   }
 
+  //emet au serveur qu'une nouvelle room a été crée
   createNewRoom(){
     this.webSocketService.emit('new-room', {roomId : this.newRoomName, game : this.game});
   }

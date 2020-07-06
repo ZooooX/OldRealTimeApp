@@ -22,6 +22,7 @@ export class TicTacToeGameComponent implements OnInit, AfterViewInit, OnDestroy{
 
   constructor(private route:ActivatedRoute, public dialog: MatDialog, private webSocket : WebSocketServiceService) { }
 
+  //au lancement, récupère l'id de la room puis demande la connexion du socket a cette room
   ngOnInit() {
     this.route.params.subscribe(
       params => {

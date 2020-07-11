@@ -23,8 +23,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(){
-    this.username = this.setName();
-    this.color = $('.colorPicker').val();
+    this.initUser();
     this.webSocket.emit('profile-change', {username : this.username, color : this.color});
   }
   ngOnDestroy(): void {
@@ -55,14 +54,37 @@ export class HeaderComponent implements OnInit,OnDestroy {
     $('.colorPicker').prop('disabled',true);
     console.log(newColor);
 
+    localStorage.setItem('username', newName);
+    localStorage.setItem('color', newColor);
+
     this.webSocket.emit("profile-change", {username : newName, color: newColor});
   }
 
-  //créer un pseudo
-  setName(){
-    let randomNumber = Math.floor(Math.random() * 500001);
-    let name = "Noob"+randomNumber;
-    $(".playerName").html(name);
-    return name;
+  //initialise pseudo et couleur de l'utilisateur en fonction de si déja enregistré dans le localStorage de l'utilisateur
+  initUser(){
+
+    //si pas de pseudo, en créé un de base
+    if (!localStorage.getItem('username')) {
+      let randomNumber = Math.floor(Math.random() * 500001);
+      let name = "Noob"+randomNumber;
+      $(".playerName").html(name);
+      this.username = name;
+    }
+    else{
+      let existingName = localStorage.getItem('username');
+      $(".playerName").html(existingName);
+      this.username = existingName;
+    }
+
+    if (!localStorage.getItem('color')) {
+      this.color = $('.colorPicker').val();
+    }
+    else{
+      let existingColor = localStorage.getItem('color');
+      $('.colorPicker').val(existingColor);
+      this.color = existingColor;
+    }
   }
+
+
 }

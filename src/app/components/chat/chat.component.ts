@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { WebSocketServiceService } from '../../services/web-socket-service.service';
 import * as $ from "jquery";
 
@@ -19,7 +19,7 @@ export class ChatComponent implements OnInit {
 
   get roomId(): string { return this._roomId; }
 
-  constructor(private webSocketService : WebSocketServiceService) { }
+  constructor(private webSocket : WebSocketServiceService) { }
 
   ngOnInit() {
     var self = this;
@@ -28,17 +28,25 @@ export class ChatComponent implements OnInit {
     $("#form_chat").submit(function(event){
       event.preventDefault();
       let message : any = $('#message').val();
-      self.webSocketService.emit('message',{room : self._roomId, message :  message});
-      self.nouveauMessage(/*pseudo,*/message/*,color*/);
+      self.webSocket.emit('message',{room : self._roomId, message :  message});
+      self.nouveauMessage(message);
       $("#message").val("").focus();
     });
 
 
     //new message recieved
-    this.webSocketService.listen("message").subscribe((data) =>{
-      console.log(data);
-
+    this.webSocket.listen("message").subscribe((data) =>{
       self.nouveauMessage(data["message"], data["username"], data["color"]);
+    });
+
+    //new user joined room
+    this.webSocket.listen("room-joined").subscribe((data) =>{
+      self.nouvellePersonne(data['username']);
+    });
+
+    // user left room
+    this.webSocket.listen("room-left").subscribe((data) =>{
+      self.chatLeftMessage(data['username']);
     });
 
   }
@@ -55,13 +63,20 @@ export class ChatComponent implements OnInit {
   }
 
   //rajoute un message de connexion dans le chat
-  nouvellePersonne(pseudo: string){
+  nouvellePersonne(pseudo?: string){
     if (pseudo) {
       $('#box').append('<p class="messageConnexion"> ' + pseudo + ' a rejoint le chat</p>');
     }
     else {
       $('#box').append('<p class="messageConnexion"> Vous avez rejoint le chat</p>');
     }
+    this.scrollToBottom();
+  }
+
+  //rajoute un message de deconnexion dans le chat
+  chatLeftMessage(pseudo: string){
+    $('#box').append('<p class="messageConnexion"> ' + pseudo + ' a quitter le chat</p>');
+    this.scrollToBottom();
   }
 
   //clean le chat
@@ -72,5 +87,11 @@ export class ChatComponent implements OnInit {
   //scroll a la fin du chat
   scrollToBottom() {
       $('#box').scrollTop($('#box').prop("scrollHeight"));
+  }
+
+  ngOnDestroy(){
+    this.webSocket.removeAllListeners('message');
+    this.webSocket.removeAllListeners('room-joined');
+    this.webSocket.removeAllListeners('room-left');
   }
 }

@@ -1,11 +1,11 @@
 import { Component, OnInit , ViewChild, AfterViewInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router, NavigationStart, NavigationEnd} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import { GameModalComponent } from '../game-modal/game-modal.component';
 import { WebSocketServiceService } from '../../services/web-socket-service.service';
 import { ChatComponent } from '../chat/chat.component';
 
-
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tic-tac-toe-game',
@@ -14,32 +14,40 @@ import { ChatComponent } from '../chat/chat.component';
 })
 export class TicTacToeGameComponent implements OnInit, AfterViewInit, OnDestroy{
 
+  previousRoomId : string;
   roomId : string;
   game : string = 'tictactoe';
   playerName : string;
+  routerEvents : any;
 
   @ViewChild(ChatComponent, {static: false}) private child:ChatComponent;
 
-  constructor(private route:ActivatedRoute, public dialog: MatDialog, private webSocket : WebSocketServiceService) { }
+  constructor(private route:ActivatedRoute, private router : Router, public dialog: MatDialog, private webSocket : WebSocketServiceService) { }
 
   //au lancement, récupère l'id de la room puis demande la connexion du socket a cette room
   ngOnInit() {
-    this.route.params.subscribe(
-      params => {
-        this.roomId =this.route.snapshot.paramMap.get('roomId');
 
-        //this.openDialog();
-      }
-    );
-    console.log(this.roomId);
-
+    this.roomId =this.route.snapshot.paramMap.get('roomId');
     this.webSocket.emit("join-room",this.roomId);
+
+    this.routerEvents = this.router.events.subscribe(event => {
+
+      if(event instanceof NavigationStart) {
+        this.previousRoomId = this.roomId;
+        this.webSocket.emit('leave-room',this.previousRoomId);
+      }
+      else if(event instanceof NavigationEnd) {
+        this.roomId = this.route.snapshot.paramMap.get('roomId');
+        this.webSocket.emit("join-room",this.roomId);
+      }
+    });
   }
 
   ngAfterViewInit(){
     this.route.params.subscribe(
       params => {
-        //this.child.resetChat();
+        this.child.resetChat();
+        this.child.nouvellePersonne();
       }
     );
 
@@ -59,8 +67,7 @@ export class TicTacToeGameComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   ngOnDestroy(){
-    this.webSocket.removeAllListeners('message');
-    this.webSocket.emit('leave-room',this.roomId);
+    this.routerEvents.unsubscribe();
   }
 
 }

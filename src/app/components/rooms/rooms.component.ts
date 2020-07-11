@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 
 import { UrlSegment , UrlSegmentGroup, Router , UrlTree, ActivatedRoute} from '@angular/router';
 import { WebSocketServiceService } from '../../services/web-socket-service.service';
@@ -55,5 +55,10 @@ export class RoomsComponent implements OnInit {
   //emet au serveur qu'une nouvelle room a été crée
   createNewRoom(){
     this.webSocketService.emit('new-room', {roomId : this.newRoomName, game : this.game});
+  }
+
+
+  ngOnDestroy(){
+    this.webSocketService.removeAllListeners("rooms");
   }
 }
